@@ -97,7 +97,7 @@ class WhenCowsayIsNotInstalled(PkgTest):
 def nothing(blah):
     print(blah)
 
-    
+
 @test(groups=[GROUP], depends_on_classes=[WhenCowsayIsNotInstalled])
 class WhenCowsayIsInstalled(PkgTest):
     """

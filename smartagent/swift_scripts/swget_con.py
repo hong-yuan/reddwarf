@@ -2,7 +2,7 @@
 
 import sys
 import swift
-from os import environ 
+from os import environ
 import socket
 
 
@@ -32,5 +32,5 @@ except (swift.ClientException, HTTPException, socket.error), err:
 
 if len(objects) == 0:
     print "container %s does not exist" % argv[1]
-print objects 
+print objects
 

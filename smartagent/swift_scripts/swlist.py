@@ -2,7 +2,7 @@
 
 import sys
 import swift
-from os import environ 
+from os import environ
 import socket
 
 try:

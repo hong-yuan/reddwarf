@@ -36,7 +36,7 @@ LOG = logging.getLogger('rsdns.client.dns_client')
 class DNSaasClient(HTTPClient):
 
     def __init__(self, accountId, user, apikey, auth_url, management_base_url):
-        tenant = "dbaas"    
+        tenant = "dbaas"
         super(DNSaasClient, self).__init__(user, apikey, tenant, auth_url)
         self.accountId = accountId
         self.management_base_url = management_base_url

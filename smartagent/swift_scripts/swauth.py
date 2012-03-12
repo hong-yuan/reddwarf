@@ -28,7 +28,7 @@ class HPCSTest(test.TestCase):
     def test_authenticate(self):
         """Test to authenticate a user"""
         print("Testing authentication")
-        
+
         result = swift.get_auth(AUTH_URL, AUTH_USERNAME, AUTH_PASSWORD, False, "2.0")
-       
+
         print dir(result)

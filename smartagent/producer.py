@@ -23,19 +23,19 @@ channel.queue_declare(queue=queue_name)
 
 
 """ now publish to the specified queue of default exchange """
-channel.basic_publish(exchange='', 
+channel.basic_publish(exchange='',
                       routing_key='demo',
                       body=message1)
 
 print " [x] Sent %r" % (message1,)
 
-channel.basic_publish(exchange='', 
+channel.basic_publish(exchange='',
                       routing_key='demo',
                       body=message2)
 
 print " [x] Sent %r" % (message2,)
 
-channel.basic_publish(exchange='', 
+channel.basic_publish(exchange='',
                       routing_key='demo',
                       body=message3)
 

@@ -37,7 +37,7 @@ class Root(base.ManagerWithFind):
 
     def is_root_enabled(self, instance_id):
         """ Return True if root is enabled for the instance;
-            False otherwise""" 
+            False otherwise"""
         resp, body = self.api.client.get(self.url % instance_id)
         check_for_exceptions(resp, body)
         return body['rootEnabled']

@@ -63,14 +63,14 @@ class SnapshotApiTest(test.TestCase):
     def tearDown(self):
         self.stubs.UnsetAll()
         super(SnapshotApiTest, self).tearDown()
-        
+
     def test_snapshots_create(self):
         self.stubs.Set(dbapi, "db_snapshot_create", db_snapshot_create)
         self.stubs.Set(guestapi.API, "create_snapshot", create_snapshot)
         req = request_obj(snapshots_url, 'POST', {"snapshot":{"instanceId": "123", "name":"test-snapsot"}})
         res = req.get_response(util.wsgi_app(fake_auth_context=self.context))
         self.assertEqual(res.status_int, 200)
-        
+
     def test_invalid_create_snapshot_request(self):
         req = request_obj(snapshots_url, 'POST')
         res = req.get_response(util.wsgi_app(fake_auth_context=self.context))

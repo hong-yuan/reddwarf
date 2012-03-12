@@ -42,7 +42,7 @@ class MgmtApiTest(test.TestCase):
 
     def setUp(self):
         super(MgmtApiTest, self).setUp()
-        self.context = context.RequestContext('fake', 'fake', 
+        self.context = context.RequestContext('fake', 'fake',
                                               auth_token=True, is_admin=False)
 
     def tearDown(self):
@@ -66,7 +66,7 @@ class MgmtApiTest(test.TestCase):
     # XXX: Just to go green, let's comment out failing tests
     # def test_images_available_to_admin(self):
         # req = webob.Request.blank(base_url + '/images/1')
-        # admin_context = context.RequestContext('fake', 'fake', 
+        # admin_context = context.RequestContext('fake', 'fake',
                                               # auth_token=True, is_admin=True)
         # res = req.get_response(util.wsgi_app(fake_auth_context=admin_context))
         # self.assertEqual(res.status_int, 200)

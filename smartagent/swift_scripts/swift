@@ -1642,7 +1642,7 @@ def st_upload(options, args, print_queue, error_queue):
 
     def _segment_job(job, conn):
         import pprint
-        pp = pprint.PrettyPrinter(indent=4) 
+        pp = pprint.PrettyPrinter(indent=4)
         print "_segment_job JOB:"
         pp.pprint(job)
         if job.get('delete', False):
@@ -1661,7 +1661,7 @@ def st_upload(options, args, print_queue, error_queue):
 
     def _object_job(job, conn):
         import pprint
-        pp = pprint.PrettyPrinter(indent=4) 
+        pp = pprint.PrettyPrinter(indent=4)
         print "_object_job JOB:"
         pp.pprint(job)
         print "_object_job type:"
@@ -1759,7 +1759,7 @@ def st_upload(options, args, print_queue, error_queue):
                     conn.put_object(container, obj, '', content_length=0,
                                     headers=put_headers)
                 else:
-                    print "put_object(%s, %s, open(%s, 'rb'), content_length=%d, headers=%s)" % (container, obj, path, getsize(path), put_headers) 
+                    print "put_object(%s, %s, open(%s, 'rb'), content_length=%d, headers=%s)" % (container, obj, path, getsize(path), put_headers)
                     conn.put_object(container, obj, open(path, 'rb'),
                         content_length=getsize(path), headers=put_headers)
                 if old_manifest:

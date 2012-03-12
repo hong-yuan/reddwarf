@@ -408,7 +408,7 @@ class LoggingVolumeDriver(VolumeDriver):
             if match:
                 matches.append(entry)
         return matches
-    
+
     def get_volume_stats(self, refresh=False):
         """Return the current state of the volume service. If 'refresh' is
            True, run the update first."""

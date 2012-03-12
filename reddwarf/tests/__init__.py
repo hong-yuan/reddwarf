@@ -98,7 +98,7 @@ class TestCase(unittest.TestCase):
     def assertErrorResponse(self, response, error_type, expected_error):
         self.assertEqual(response.status_int, error_type().code)
         self.assertIn(expected_error, response.body)
-        
+
     def assertDictKeysEqual(self, dict1, dict2):
         self._assertDictKeysEqual(dict1, dict2)
         self._assertDictKeysEqual(dict2, dict1)
@@ -108,27 +108,27 @@ class TestCase(unittest.TestCase):
             self.assertIn(k, dict2)
             if type(v) is dict:
                 self._assertDictKeysEqual(v, dict2[k])
-        
+
 class DBTestCase(TestCase):
     def setUp(self):
         super(DBTestCase, self).setUp()
-        
+
         if os.path.isfile("unittest.db"):
             os.remove("unittest.db")
-            
+
         FLAGS.Reset()
         FLAGS['sql_connection'].SetDefault("sqlite:///unittest.db")
-        
+
         metaModel = []
         for name, obj in inspect.getmembers(models):
             if inspect.isclass(obj):
                 for c in inspect.getmro(obj):
                     if "nova.db.sqlalchemy.models" == c.__module__ and "NovaBase" == c.__name__ and obj.__name__ != "NovaBase":
                         metaModel.append(obj)
-        
+
         engine = session.get_engine()
         for model in metaModel:
             model.metadata.bind = engine
             model.metadata.create_all()
-        
-        
+
+

@@ -60,4 +60,4 @@ def create_resource():
     body_serializers = { 'application/xml': xml_serializer }
     serializer = wsgi.ResponseSerializer(body_serializers)
     return wsgi.Resource(controller, serializer=serializer)
-    
+

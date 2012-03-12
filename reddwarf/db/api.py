@@ -120,15 +120,15 @@ def guest_status_delete(instance_id):
                         'deleted_at': datetime.datetime.utcnow(),
                         'state': state,
                         'state_description': power_state.name(state)})
-                
+
 def instance_create(user_id, project_id, instance_name, server):
     """Creates an instance record """
     LOG.debug("instance_create id = %s" % str(server.id))
-    
+
     from nova.db.sqlalchemy import models as nova_models
 
     instance = nova_models.Instance()
-    
+
     instance.update({'created_at': utils.utf8(server.created),
                      'internal_id': server.id,
                      'user_id': user_id,
@@ -146,13 +146,13 @@ def instance_create(user_id, project_id, instance_name, server):
     session = get_session()
     with session.begin():
         instance.save(session=session)
-    
+
     return instance
 
 def instance_set_public_ip(instance_id, public_ip):
     """Updates an instance record with an IP"""
     LOG.debug("instance_set_public_ip id = %s" % str(instance_id))
-    
+
     from nova.db.sqlalchemy import models as nova_models
 
     session = get_session()
@@ -161,11 +161,11 @@ def instance_set_public_ip(instance_id, public_ip):
                 filter_by(uuid=instance_id).\
                 update({'access_ip_v4': public_ip,
                         'updated_at': datetime.datetime.utcnow()})
-                
+
 def instance_delete(instance_id):
     """Delete instance"""
     LOG.debug("instance_delete id = %s" % str(instance_id))
-    
+
     from nova.db.sqlalchemy import models as nova_models
 
     session = get_session()
@@ -174,7 +174,7 @@ def instance_delete(instance_id):
                 filter_by(uuid=instance_id).\
                 update({'deleted': True,
                         'deleted_at': datetime.datetime.utcnow()})
-                
+
 @require_admin_context
 def show_instances_on_host(context, id):
     """Show all the instances that are on the given host id."""
@@ -254,7 +254,7 @@ def volume_get_orphans(context, latest_time):
                      filter_by(instance_id=None).\
                      filter(Volume.status=='available').\
                      filter(Volume.updated_at < latest_time).\
-                     all()                     
+                     all()
     return result
 
 def get_root_enabled_history(context, id):
@@ -509,18 +509,18 @@ def rsdns_record_list():
 
 def db_snapshot_create(context, values):
     """
-    Create a new database snapshot entry  
+    Create a new database snapshot entry
     """
     db_snapshot = models.DbSnapShots()
     db_snapshot.update(values)
-    
+
     db_snapshot.created_at = utils.utcnow()
     db_snapshot.deleted = False
 
     session = get_session()
     with session.begin():
         db_snapshot.save(session=session)
-    
+
     return db_snapshot
 
 def db_snapshot_get(uuid):
@@ -566,7 +566,7 @@ def db_snapshot_update(uuid, state, storage_uri, storage_size):
                        'storage_uri': storage_uri,
                        'storage_size': storage_size,
                        'state': state})
-        
+
 def db_snapshot_list_by_user(context, user_id):
     """
     Fetches all db_snapshots for a given user

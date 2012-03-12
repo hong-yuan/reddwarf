@@ -154,7 +154,7 @@ def get_conn(options):
     return Connection(options['auth'],
                       options['user'],
                       options['key'],
-                      options['snet'], 
+                      options['snet'],
                       auth_version=options['auth_version'])
 
 
@@ -1067,7 +1067,7 @@ def st_download(options, container, obj):
         etag = headers.get('etag')
         # TODO: fix this headache - downloading to ./container/object not desired
         path = join(container, obj) or obj
-        out_file = obj 
+        out_file = obj
         if path[:1] in ('/', '\\'):
             path = path[1:]
             out_file = path
@@ -1184,7 +1184,7 @@ def st_upload(options, container, path):
             if err.errno != ENOENT:
                 raise
             print 'Local file %s not found' % repr(path)
-        
+
     except ClientException, err:
         if err.http_status != 404:
             raise

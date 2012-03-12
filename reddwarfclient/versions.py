@@ -28,7 +28,7 @@ class Versions(base.ManagerWithFind):
     """
 
     resource_class = Version
-    
+
     def index(self, url):
         """
         Get a list of all versions.

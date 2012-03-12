@@ -33,7 +33,7 @@ class FakeVolumeApi(object):
 
     def delete(self, context, volume):
         self.deleted_volumes.append(volume)
-    
+
 
 class TestWhenAVolumeIsOrphaned(test.TestCase):
 

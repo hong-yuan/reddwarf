@@ -73,7 +73,7 @@ def _modify(migrate_engine, new_instances):
     # Don't create your own engine; bind migrate_engine
     # to your metadata
     meta.bind = migrate_engine
-    
+
     try:
         i = instance_types.delete()
         i.execute()

@@ -10,5 +10,5 @@ class SwiftCredential:
         self.user = user
         self.key = key
         self.auth = auth
-        
-        
+
+

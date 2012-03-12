@@ -45,9 +45,9 @@ class ViewBuilder(object):
         instance = {}
         instance['id'] = server.uuid
         instance['name'] = server.server_name
-        
+
         remote_id = server.internal_id
-            
+
         instance['status'] = self.get_instance_status(remote_id, guest_states)
         instance['links'] = self._build_links(req, instance)
         instance['created'] = server.created_at
@@ -62,13 +62,13 @@ class ViewBuilder(object):
         # Add the hostname
         instance['hostname'] = server.access_ip_v4
         instance['port'] = 3306
-                
+
         # Default credentials on Database Create
         credentials = { 'username' : 'dbas',
                         'password' : 'hpcs'
                       }
         if create:
-            instance['credentials'] = credentials 
+            instance['credentials'] = credentials
 
         return instance
 

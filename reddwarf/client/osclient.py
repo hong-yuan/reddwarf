@@ -33,7 +33,7 @@ Created on Feb 1, 2012
 '''
 from novaclient.v1_1 import client
 from novaclient.v1_1 import servers
-from reddwarf import exception 
+from reddwarf import exception
 from nova import flags
 from nova import log as logging
 import eventlet
@@ -53,33 +53,33 @@ class OSClient(object):
         Constructor
         '''
         password = api_key
-        
+
         self.client = client.Client(username,password,project_id, auth_url, region_name=region_name)
-        
+
     def create(self, hostname, image, flavor, files, key_name, security_groups, userdata):
         LOG.debug("OSClient - create()")
         return self.client.servers.create(hostname, image, flavor, files=files, key_name=key_name, security_groups=security_groups, userdata=userdata)
-    
+
     def delete (self, id):
         LOG.debug("OSClient - delete()")
         return self.client.servers.delete(id)
-    
+
     def restart(self, id):
         LOG.debug("OSClient - restart() using id %s", id)
         return self.client.servers.reboot(id)
-    
+
     def show(self, id):
         LOG.debug("OSClient - show() using id %s", id)
         #server = servers.Server()
         #server.id = id
         return self.client.servers.get(id)
-    
+
     def flavors(self):
         return self.client.flavors.findall()
-    
+
     def assign_public_ip(self,id):
         LOG.debug("Assigning public IP to instance %s" % id)
-        
+
         ip = None
         fl = self.client.floating_ips.list()
         for flip in fl:
@@ -88,15 +88,15 @@ class OSClient(object):
                 ip = flip.ip
                 #self.client.servers.add_floating_ip(id, flip.ip)
                 break
-        
+
         if ip is None:
             floating_ip = self.client.floating_ips.create(None)
             ip = floating_ip.ip
-        
+
         LOG.debug("Found IP to Assign: %s" + str(ip) )
 
         # Fail after 30 attempts
-        success = False        
+        success = False
         for i in range(30):
             try:
                 LOG.debug('Assign public IP, Attempt %d', i)
@@ -109,9 +109,9 @@ class OSClient(object):
 
         if success is False:
             raise exception.InstanceFault()
-            
+
         return ip
-    
+
     def ensure_security_group(self, name, port):
         LOG.debug("Checking SecurityGroup %s" % name % " exists")
-                
+

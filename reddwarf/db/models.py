@@ -74,12 +74,12 @@ class RsDnsRecord(BASE, NovaBase):
 
     name = Column(String(length=255), primary_key=True)
     id = Column('id', String(length=64))
-    
+
 class DbSnapShots(BASE, NovaBase):
     """Table for recording snapshot info"""
 
     __tablename__ = 'database_snapshots'
-    
+
     created_at = Column('created_at', DateTime(timezone=False))
     updated_at = Column('updated_at', DateTime(timezone=False))
     deleted_at = Column('deleted_at', DateTime(timezone=False))

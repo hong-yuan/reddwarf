@@ -348,7 +348,7 @@ class FlagNotSet(NotFound):
 class ConfigNotFound(NotFound):
     message = _("Configuration %(key)s not found.")
 
-    
+
 class RsDnsRecordNotFound(NotFound):
     message = _("RsDnsRecord with name= %(name)s not found.")
 

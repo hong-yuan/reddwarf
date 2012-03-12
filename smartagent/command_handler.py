@@ -33,7 +33,7 @@ try:
 except Exception:
     pass
 import socket
-import string 
+import string
 
 from check_mysql_status import MySqlChecker
 
@@ -52,7 +52,7 @@ def random_string(size=6):  # TODO: move to utils.py
     return ''.join(random.choice(chars) for x in range(size))
 
 def write_dotmycnf(user='os_admin', password='hpcs'):  # TODO: move to class/utils.py
-    """ Write the .my.cnf file so as the user does not require credentials 
+    """ Write the .my.cnf file so as the user does not require credentials
     for the DB """
     # open and write .my.cnf
     cnf_file_name = os.path.join(paths.mycnf_base, '.my.cnf')
@@ -61,10 +61,10 @@ def write_dotmycnf(user='os_admin', password='hpcs'):  # TODO: move to class/uti
             mycf.write( "[client]\nuser={}\npassword={}" . format(user, password))
     except OSError as os_error:
         LOG.error('Error writing .cnf file: %s', os_error)
-  
+
 class MysqlCommandHandler:
     """ Class for passing commands to mysql """
-    
+
     # TODO: extract to paths.py
     def __init__(self,
                  host_name='localhost',
@@ -108,14 +108,14 @@ class MysqlCommandHandler:
     def delete_user(self, username):
         """ delete the user, all grants """
         sql_commands = []
-        
+
         # Prepare SQL query to UPDATE required records
         sql_delete = \
             "delete from mysql.user where User = '%s'" % username
         sql_flush = "FLUSH PRIVILEGES"
         sql_commands.append(sql_delete)
         sql_commands.append(sql_flush)
-       
+
         # Open database connection
         try:
             self.persistence_agent.execute_sql_commands(sql_commands)
@@ -127,7 +127,7 @@ class MysqlCommandHandler:
 
     def delete_user_host(self, username, host):
         """ delete the user, specific user@host grant """
-        
+
         # Prepare SQL query to UPDATE required records
         sql_delete = \
             "drop user '%s'@'%s'" % (username, host)
@@ -149,7 +149,7 @@ class MysqlCommandHandler:
                             username='dbas',
                             newpassword='something'):
         """ reset the user's password """
-        
+
         # Prepare SQL query to UPDATE required records
         sql_update = \
             "update mysql.user set Password=PASSWORD('%s') WHERE User='%s'"\
@@ -171,19 +171,19 @@ class MysqlCommandHandler:
         # generate a password
         newpassword = random_string(16)
 
-        # SQL statement to change agent password 
+        # SQL statement to change agent password
         sql = "SET PASSWORD FOR '%s'@'localhost'"\
             " PASSWORD('%s')" % (username, newpassword)
         sql_commands = [sql]
 
         # Open database connection
-        try: 
+        try:
             # Execute the SQL command
             self.persistence_agent.execute_sql_commands(sql_commands)
             result = ResultState.SUCCESS
-            # write the .my.cnf for the agent user so the agent can connect 
+            # write the .my.cnf for the agent user so the agent can connect
             write_dotmycnf(username, newpassword)
-            
+
         except _mysql.Error as error:
             result = ResultState.FAILED
             LOG.error("Reset agent password failed: %s", error)
@@ -197,7 +197,7 @@ class MysqlCommandHandler:
             result = ResultState.FAILED
             LOG.error("Create database failed : no database defined")
             return result
-        
+
         sql_create = \
         "create database `%s`" % database
         sql_commands = [sql_create]
@@ -240,18 +240,18 @@ class MysqlCommandHandler:
 #                filename = os.path.join(path, file)
 #                snapshot_size += os.path.getsize(filename)
 #        return snapshot_size
-            
-    
+
+
     def get_response_body_for_create_snapshot(self, container, path_specifier, result, snapshot_size=0):
         #temp = 'mysql-backup' + '/' + path_specifier + '.tar.gz'
         if result == ResultState.SUCCESS:
             temp_file_name = '%s%s' % (os.path.join(container, path_specifier), '.tar.gz')
         else:
             temp_file_name = 'N/A'
-        
-        return {"method": "update_snapshot_state", 
-                "args": {"sid": path_specifier, 
-                         "state": result, 
+
+        return {"method": "update_snapshot_state",
+                "args": {"sid": path_specifier,
+                         "state": result,
                          "storage_uri": temp_file_name,
                          "storage_size": snapshot_size }}
 
@@ -262,10 +262,10 @@ class MysqlCommandHandler:
         leading_path =''
         for direct in directs:
             leading_path = os.path.join(leading_path, direct)
-        
+
         #print '%s/' % leading_path
         return '%s/' % leading_path
-    
+
     def create_tar_file(self, path, tar_name):
         try:
             target_name = '%s%s' % (tar_name, '.tar.gz')
@@ -283,13 +283,13 @@ class MysqlCommandHandler:
         except Exception as tarfile_exception:
             LOG.error('tar/compress snapshot failed somehow: %s',
                 tarfile_exception)
-            return ResultState.FAILED  
-    
+            return ResultState.FAILED
+
     def keyword_checker(self, keyword_to_check, log_path):
         try:
             with open(log_path, "r") as f:
                 last_lines = f.readlines()[-1:]
-        
+
             for line in last_lines:
                 if keyword_to_check in line:
                     LOG.debug("innobackupex runs successfully; read: %s",
@@ -301,13 +301,13 @@ class MysqlCommandHandler:
                     return ResultState.FAILED
         except Exception:
             LOG.error("log file does not exist: %s", log_path)
-            
-            
+
+
     def check_process(self, proc):
         status = proc.poll()
         iteration = 0
         TIME_OUT = 8640 # time out after 12 hours = 60 * 60 * 12 / 5
-        
+
         while status !=0 and iteration < TIME_OUT:
             iteration = iteration + 1
             if status is None:
@@ -321,15 +321,15 @@ class MysqlCommandHandler:
             return 'timed out'
         else:
             return 'normal'
-    
+
     def create_db_snapshot(self, path_specifier, st_user, st_key, st_auth, container='mysql-backup-dbasdemo'):
         path = os.path.join(paths.backup_path, path_specifier)
         log_home = os.path.join(paths.backlog_path, path_specifier)
         keyword_to_check = "innobackupex: completed OK!"  # TODO: replace with regexp?
-        
+
         result = None
         """ create backup snapshot first """
-        
+
         log_path = '%s%s' % (log_home, '_innobackupex_create.log')
         inno_backup_cmd = "innobackupex --no-timestamp %s > %s 2>&1" % (path, log_path)
 
@@ -345,7 +345,7 @@ class MysqlCommandHandler:
                 return self.get_response_body_for_create_snapshot(container,
                     path_specifier,
                     ResultState.FAILED)
-        
+
         result = self.keyword_checker(keyword_to_check, log_path)
         if result != ResultState.SUCCESS:
             LOG.error('snapshot is not ready for preparation')
@@ -354,9 +354,9 @@ class MysqlCommandHandler:
                 ResultState.FAILED)
 
         """ prepare the snapshot for uploading to swift """
-        
+
         log_path = '%s%s' % (log_home, '_innobackupex_prepare.log')
-            
+
         inno_prepare_cmd = "innobackupex --use-memory=1G --apply-log %s > %s 2>&1" % (path, log_path)
 
         try:
@@ -369,14 +369,14 @@ class MysqlCommandHandler:
             if self.check_process(proc) != 'normal':
                 LOG.error('preparation failed somehow')
                 return self.get_response_body_for_create_snapshot(container, path_specifier, ResultState.FAILED)
-            
+
         result = self.keyword_checker(keyword_to_check, log_path)
         if result != ResultState.SUCCESS:
             LOG.error('preparation encounter exceptions or errors')
             return self.get_response_body_for_create_snapshot(container,
                 path_specifier,
                 ResultState.FAILED)
-        
+
         """ tar the entire backup folder """
         try:
             tar_result = self.create_tar_file(path, path_specifier)
@@ -430,10 +430,10 @@ class MysqlCommandHandler:
 
         LOG.debug(response_body)
         return response_body
-    
+
     def restart_database(self):
         """ This restarts MySQL for reading conf changes"""
-        try: 
+        try:
             proc = subprocess.Popen("sudo service mysql restart", shell=True)
         except (OSError, ValueError) as ex_oserror:
             LOG.error('Popen exception caught: %s', ex_oserror)
@@ -446,7 +446,7 @@ class MysqlCommandHandler:
                 LOG.error('restart mysql failed somehow')
                 return ResultState.FAILED
             return self.checker.check_if_running(sleep_time_seconds=2, number_of_checks=2)
-    
+
 
     def stop_database(self):
         """ This stop MySQL """
@@ -465,7 +465,7 @@ class MysqlCommandHandler:
                 LOG.error('restart mysql failed somehow')
                 return ResultState.FAILED
             return not self.checker.check_if_running(sleep_time_seconds=2, number_of_checks=2)
-        
+
     def start_database(self):
         """ This start MySQL """
         try:
@@ -481,13 +481,13 @@ class MysqlCommandHandler:
                 LOG.error('restart mysql failed somehow')
                 return ResultState.FAILED
             return self.checker.check_if_running(sleep_time_seconds=2, number_of_checks=2)
-        
+
     def get_response_body_for_apply_snapshot(self, result):
-        
-        return {"method": "update_instance_state", 
-                "args": {"hostname": os.uname()[1], 
+
+        return {"method": "update_instance_state",
+                "args": {"hostname": os.uname()[1],
                          "state": result }}
-        
+
     def extract_tar_file(self, dest_path, tar_name):
         try:
             with tarfile.open(tar_name, 'r:gz') as tar_file:
@@ -497,14 +497,14 @@ class MysqlCommandHandler:
             LOG.error('untar/decompress snapshot failed somehow: %s',
                 tarfile_exception)
             return False
-    
+
     def apply_db_snapshot(self, uri, st_user, st_key, st_auth):
-        
+
         LOG.debug('inside apply_db_snapshot, we are here')
         """ stop mysql server """
         if not self.stop_database():
             return self.get_response_body_for_apply_snapshot(ResultState.FAILED)
-        
+
         """ push the current data to history folder and set the correct permission"""
         try:
             time_stamp = time.time()
@@ -520,14 +520,14 @@ class MysqlCommandHandler:
             LOG.error('remove historical data encounter errors: %s', os_error)
         except Exception as ex:
             LOG.error('remove historical data encounter generic errors: %s', ex)
-            
+
         """ parse the uri to get the swift container and object """
         paras = string.split(uri, '/')
         container_name = paras[0]
         snapshot_name = paras[1]
         LOG.debug('passed in swift container: %s and snapshot name: %s', container_name, snapshot_name)
-        
-        
+
+
         """ download snapshot from swift """
         opts = {'auth' : st_auth,
                     'user' : st_user,
@@ -542,7 +542,7 @@ class MysqlCommandHandler:
 #                    'snet' : False,
 #                    'prefix' : '',
 #                    'auth_version' : '1.0'}
-            
+
         try:
             cont = swift.st_get_container(opts, container_name)
             if not len(cont):
@@ -551,13 +551,13 @@ class MysqlCommandHandler:
                 LOG.debug('return message body: %s', result)
                 return result
             swift.st_download(opts, container_name, snapshot_name)
-            
+
         except (swift.ClientException, HTTPException, socket.error), err:
             LOG.error('Failed to download snapshot from swift: %s', err)
             result = self.get_response_body_for_apply_snapshot(ResultState.FAILED)
             LOG.debug('return message body: %s', result)
             return result
-        
+
         """ decompress snapshot """
         if not self.extract_tar_file('/var/lib/mysql', snapshot_name):
             return self.get_response_body_for_apply_snapshot(ResultState.FAILED)
@@ -572,13 +572,13 @@ class MysqlCommandHandler:
             LOG.error('reset permission (before restart mysql) encounter errors: %s', os_error)
         except Exception as ex:
             LOG.error('reset permission (before restart mysql) encounter generic errors: %s', ex)
-            
+
         """ restart mysql """
         if not self.start_database():
             return self.get_response_body_for_apply_snapshot(ResultState.FAILED)
-        
+
         return self.get_response_body_for_apply_snapshot(ResultState.RUNNING)
-    
+
 def main():
     """ main program """
     handler = MysqlCommandHandler()
@@ -586,6 +586,6 @@ def main():
     #handler.create_db_snapshot(container='mysql-backup-dbasdemo', path_specifier='anna')
     #handler.restart_database()
     handler.apply_db_snapshot('mysql-backup-dbasdemo/anna.tar.gz', 'st_user', 'st_key', 'st_auth')
-    
+
 if __name__ == '__main__':
     main()

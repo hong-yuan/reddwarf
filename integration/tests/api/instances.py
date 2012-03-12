@@ -321,7 +321,7 @@ class AfterInstanceCreation(unittest.TestCase):
     def test_users_delete_after_create(self):
         assert_raises(exceptions.UnprocessableEntity, dbaas.users.delete,
                       instance_info.id, "testuser")
-        
+
     def test_users_create_after_create(self):
         users = list()
         users.append({"name": "testuser", "password": "password",

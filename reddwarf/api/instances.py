@@ -106,7 +106,7 @@ class Controller(object):
         context = req.environ['nova.context']
 
         instance_list = db.api.instance_get_all_by_user(context, context.user_id)
-        
+
         #servers_respose = self.server_controller.index(req)
         #server_list = servers_response['servers']
         #context = req.environ['nova.context']
@@ -141,12 +141,12 @@ class Controller(object):
         db_instance = dbapi.instance_from_uuid(id)
         if not db_instance:
             return exc.HTTPNotFound()
-        
+
         remote_id = db_instance.internal_id
         guest_state = self.get_guest_state_mapping([remote_id])
 
         instance = self.view.build_single(db_instance, req, guest_state)
-        
+
         LOG.debug("instance - %s" % instance)
         return {'instance': instance}
 
@@ -154,12 +154,12 @@ class Controller(object):
         """ Destroys an instance """
         LOG.info("Delete Instance by ID - %s", id)
         LOG.debug("%s - %s", req.environ, req.body)
-        
+
         internal_id = dbapi.internalid_from_uuid(id)
         LOG.debug("Remote ID: " + str(internal_id))
         if not internal_id:
             return exc.HTTPNotFound()
-        
+
         LOG.debug("Deleting instance %d" % int(internal_id))
         try:
             self.client.delete(internal_id)
@@ -171,7 +171,7 @@ class Controller(object):
             LOG.debug("Delete: internal server error")
             LOG.debug(e)
             return exc.HTTPInternalServerError()
-        
+
         dbapi.instance_delete(id)
         return exc.HTTPAccepted()
 
@@ -185,7 +185,7 @@ class Controller(object):
 
         context = req.environ['nova.context']
         LOG.debug(" BODY Instance Name: " + body['instance']['name'])
-        
+
         instance_name = body['instance']['name']
 
         # Generate a UUID and set as the hostname, to guarantee unique
@@ -204,9 +204,9 @@ class Controller(object):
                 storage_uri = db_snapshot.storage_uri
                 LOG.debug("Found Storage URI for snapshot: %s" % storage_uri)
 
-        # Create the Server remotely    
+        # Create the Server remotely
         server_resp = self._try_create_server(req, host_name, image_id, flavor_ref, storage_uri)
-        
+
         # Capture response values
         instance_id = server_resp.uuid
         remote_id = str(server_resp.id)
@@ -215,10 +215,10 @@ class Controller(object):
 
         # Create DB Entry
         db_instance = dbapi.instance_create(context.user_id, context.project_id, instance_name, server_resp)
-        
+
         # Need to assign public IP, but also need to wait for Networking
         ip = self.client.assign_public_ip(remote_id)
-        
+
         dbapi.instance_set_public_ip(instance_id, ip)
         dbapi.guest_status_create(remote_id)
 
@@ -226,29 +226,29 @@ class Controller(object):
         #server_resp.accessIPv4 = ip
         #print server_resp.accessIPv4
         #server_resp.name = instance_name
-        
+
         db_instance.access_ip_v4 = ip
-        
+
         guest_state = self.get_guest_state_mapping([remote_id])
         instance = self.view.build_single(db_instance, req, guest_state, create=True)
 
         return { 'instance': instance }
-    
+
     def restart_compute_instance(self, req, instance_id):
-        """Restarts a compute instance by ID"""     
+        """Restarts a compute instance by ID"""
         LOG.info("Restart Compute Instance by ID - %s", instance_id)
         LOG.debug("%s - %s", req.environ, req.body)
-        
+
         context = req.environ['nova.context']
         remote_id = dbapi.internalid_from_uuid(instance_id)
         LOG.debug("Remote ID: " + str(remote_id))
-        
+
         server_response = self.client.restart(remote_id)
         print server_response
-        
+
         server_response = self.client.show(instance_id)
         LOG.info("Called OSClient.restart().  Response: %s", server_response)
-        
+
         if 'rebooting' not in server_response.status:
             raise exception.InstanceFault("There was a problem restarting" +\
                 " this instance.  If this problem persists, please" +\
@@ -257,7 +257,7 @@ class Controller(object):
         return exc.HTTPAccepted()
 
     def reset_db_password(self, req, instance_id):
-        """Resets DB password on remote instance"""     
+        """Resets DB password on remote instance"""
         LOG.info("Resets DB password on Instance %s", instance_id)
         password = utils.generate_password()
         context = req.environ['nova.context']
@@ -295,7 +295,7 @@ processing of the result etc.
         try:
             # Default SecurityGroup to use for instances
             sec_group = FLAGS.default_firewall_rule_name
-            
+
             conf_file = '[messaging]\n'\
                         'rabbit_host: ' + FLAGS.rabbit_host + '\n'\
                         '\n'\
@@ -309,9 +309,9 @@ processing of the result etc.
                                'swift_auth_url: ' + FLAGS.swiftclient_auth_url + '\n'\
                                'swift_auth_user: ' + FLAGS.swiftclient_user + '\n'\
                                'swift_auth_key: ' + FLAGS.swiftclient_key + '\n'
-                        
+
             LOG.debug('%s',conf_file)
-            
+
             files = { '/home/nova/agent.config': conf_file }
             #files = None
             userdata = None

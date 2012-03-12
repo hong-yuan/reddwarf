@@ -49,7 +49,7 @@ def setupAuthentication():
     object_url = result[0]
     auth_token = result[1]
     authenticated = True
-    
+
     return auth_token, object_url, authenticated
 
 class HPCSTest(unittest.TestCase):
@@ -60,12 +60,12 @@ class HPCSTest(unittest.TestCase):
         auth_token, object_url, authenticated = setupAuthentication()
 
         print "Setting up the authentication"
-        
-    
+
+
     def setUp(self):
         print ""
 
-        
+
     def cleanUpContainer(self):
         swifty.delete_container(object_url, auth_token, TEST_CONTAINER)
 
@@ -73,109 +73,109 @@ class HPCSTest(unittest.TestCase):
     def test_authenticate(self):
         """Test to authenticate a user"""
         print("Testing authentication")
-        
+
         result = swifty.get_auth(AUTH_URL, AUTH_USERNAME, AUTH_PASSWORD, False, "2.0")
-        
+
         print result
         #print type(result)
         self.assertIsInstance(result, tuple)
-        
+
     def test_authenticateFails(self):
         print("Testing authentication fail")
-        
+
         AUTH_PASSWORD = "notmypassword"
-        
-        self.assertRaises(swifty.ClientException, swifty.get_auth, AUTH_URL, AUTH_USERNAME, AUTH_PASSWORD, False, "2.0") 
-        
+
+        self.assertRaises(swifty.ClientException, swifty.get_auth, AUTH_URL, AUTH_USERNAME, AUTH_PASSWORD, False, "2.0")
+
     def test_accountGet(self):
         print("Testing get Account")
-        
+
         result = swifty.get_account(object_url, auth_token)
-        
+
         print result
-        
+
         self.assertIsInstance(result, tuple)
-        
+
     def test_accountGetStats(self):
         """Get account Stats"""
         print("Testing get account stats")
-        
+
         result = swifty.head_account(object_url, auth_token)
-        
+
         print result
-        
+
         self.assertIsInstance(result, dict)
-        
+
     def test_containerCreate(self):
         """Create a new container"""
         print("Testing create a new container")
-        
+
         result = swifty.put_container(object_url, auth_token, TEST_CONTAINER)
         print swifty.get_account(object_url, auth_token)
         "Clean up the newly created container"
         self.cleanUpContainer()
-        
+
         self.assertEquals(result, None)
-        
+
     def test_containerGet(self):
         """Get a container"""
         print("Testing getting a container")
-        
+
         swifty.put_container(object_url, auth_token, TEST_CONTAINER)
         result = swifty.get_container(object_url, auth_token, TEST_CONTAINER)
-        
+
         "Clean up the newly created container"
         self.cleanUpContainer()
-        
+
         print result
-        
+
         self.assertIsInstance(result, tuple)
-        
+
     def test_containerGetStats(self):
         """Get a container stats"""
         print("Testing getting a container stats")
-        
+
         swifty.put_container(object_url, auth_token, TEST_CONTAINER)
         result = swifty.head_container(object_url, auth_token, TEST_CONTAINER)
-        
+
         "Clean up the newly created container"
         self.cleanUpContainer()
-        
+
         print result
-        
+
         self.assertIsInstance(result, dict)
-        
+
     @unittest.skip("Skipping, need to research implementation of more headers for meta data")
     def test_containerAddMetaData(self):
         """Add meta data to a container"""
         print("Testing add meta data to container")
-        
+
         metaData = {'keyvalue': 'test'}
-        
+
         swifty.put_container(object_url, auth_token, TEST_CONTAINER)
         result = swifty.post_container(object_url, auth_token, TEST_CONTAINER, metaData)
         print swifty.get_container(object_url, auth_token, TEST_CONTAINER)
-        
+
         print result
         print type(result)
-        
+
         self.cleanUpContainer()
-        
+
         self.assertEquals(result, None)
-        
+
     def test_containerDelete(self):
         """Delete a container"""
         print("Testing delete a container")
-        
+
         print "Added container list"
         swifty.put_container(object_url, auth_token, TEST_CONTAINER)
         print swifty.get_account(object_url, auth_token)
         print "New list once container deleted"
         result = swifty.delete_container(object_url, auth_token, TEST_CONTAINER)
         print swifty.get_account(object_url, auth_token)
-        
+
         self.assertEquals(result, None)
-        
+
 #    def test_makeContainer(self):
 #        print("Making a container")
 #        swifty.put_container(object_url, auth_token, "KevinContainer")
@@ -183,15 +183,15 @@ class HPCSTest(unittest.TestCase):
 #        swifty.post_container(object_url, auth_token, "KevinContainer", metaData)
 #        print swifty.get_container(object_url, auth_token, "KevinContainer")
 #        self.assertEquals(True, True)
-        
-    
-        
+
+
+
 if __name__ == '__main__':
     unittest.main()
-        
-        
-        
-        
-        
-    
-            
+
+
+
+
+
+
+

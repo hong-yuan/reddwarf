@@ -109,7 +109,7 @@ class RecordsManager(base.ManagerWithFind):
             url += ("/%s" % record_id)
         resp, body = self.api.client.get(url)
         try:
-            list = body['records']            
+            list = body['records']
         except NameError:
             raise RuntimeError('Body was missing "records" or "record" key.')
         all_records = self.create_from_list(list)

@@ -146,7 +146,7 @@ class Service(object):
          """
         if not self.cmd:
             return False
-        time.sleep(1) 
+        time.sleep(1)
         # The cmd[1] signifies the executable python script. It gets invoked
         # as python /path/to/executable args, so the entry is /path/to/executable
         actual_command = self.cmd[1].split("/")[-1]
@@ -173,7 +173,7 @@ class Service(object):
         self.stop()
         time.sleep(2)
         self.start(extra_args=extra_args)
-    
+
     def start(self, time_out=30, extra_args=None):
         """Starts the service if necessary."""
         extra_args = extra_args or []

@@ -79,7 +79,7 @@ class Controller(object):
         except ValueError as ve:
             LOG.error(ve)
             raise exception.BadRequest(ve.message)
-        
+
         self.guest_api.delete_database(ctxt, local_id, mydb.serialize())
         return exc.HTTPAccepted()
 

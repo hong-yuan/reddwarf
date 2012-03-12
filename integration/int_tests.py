@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
     from nova import utils
     utils.default_flagfile(str(nova_conf))
-    
+
     from nova import flags
     FLAGS = flags.FLAGS
     FLAGS(sys.argv)

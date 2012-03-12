@@ -159,4 +159,4 @@ class DeserializationTest(unittest.TestCase):
 
     def test_create_user_no_users(self):
         self.user_deser.create("""<users />""")
-        
+

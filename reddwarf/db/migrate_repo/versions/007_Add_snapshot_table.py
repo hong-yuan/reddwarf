@@ -21,7 +21,7 @@ snapshots = Table('database_snapshots', meta,
                Column('storage_user_id', String(length=32)),
                Column('storage_size', Integer()))
 
-         
+
 def upgrade(migrate_engine):
     # Upgrade operations go here. Don't create your own engine; bind
     # migrate_engine to your metadata

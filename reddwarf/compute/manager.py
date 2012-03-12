@@ -141,7 +141,7 @@ class ReddwarfInstanceInitializer(object):
         self.db.volume_attached(self.context, self.volume_id,
                                 self.instance_id, self.volume_mount_point)
         volume_api.update(self.context, self.volume_id, {})
-    
+
     def initialize_guest(self, guest_api):
         """Tell the guest to initialize itself and wait for it to happen.
 

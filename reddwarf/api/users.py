@@ -43,7 +43,7 @@ class Controller(object):
 
     def show(self, req, instance_id, id):
         raise exception.NotImplemented()
-    
+
     def index(self, req, instance_id):
         """ Returns a list database users for the db instance """
         LOG.info("Call to Users index - %s", instance_id)

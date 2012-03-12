@@ -52,10 +52,10 @@ class Controller(object):
         db_snapshot = dbapi.db_snapshot_get(id)
         if not db_snapshot:
             return exc.HTTPNotFound()
-        
+
         snapshot = self.view.build_single(db_snapshot, req)
         return { 'snapshot' : snapshot }
-    
+
     def index(self, req):
         """ Returns a list of Snapshots for the Instance """
         LOG.info("List snapshots")
@@ -73,17 +73,17 @@ class Controller(object):
                 if name_value[0] == 'instanceId':
                     instance_id = name_value[1]
                     break
-        
+
         if instance_id and len(instance_id) > 0:
             LOG.debug("Listing snapshots by instance_id %s", instance_id)
             snapshot_list = dbapi.db_snapshot_list_by_user_and_instance(context, user_id, instance_id)
         else:
             LOG.debug("Listing snapshots by user_id %s", user_id)
             snapshot_list = dbapi.db_snapshot_list_by_user(context, user_id)
-        
+
         snapshots = [self.view.build_index(db_snapshot, req)
                     for db_snapshot in snapshot_list]
-        
+
         return dict(snapshots=snapshots)
 
     def delete(self, req, id):
@@ -92,23 +92,23 @@ class Controller(object):
         LOG.debug("%s - %s", req.environ, req.body)
         context = req.environ['nova.context']
         db_snapshot = dbapi.db_snapshot_get(id)
-        
+
         if not db_snapshot:
             return exc.HTTPNotFound()
 
         uri = db_snapshot.storage_uri
-        
+
         #Only delete from swift if we have a URI
         if uri and len(uri) > 0:
             container, file = uri.split('/',2)
-        
+
             LOG.debug("Deleting from Container: %s - File: %s", container, file)
-    
+
             ## TODO Move these to database!
             ST_AUTH=FLAGS.swiftclient_auth_url
             ST_USER=FLAGS.swiftclient_user
             ST_KEY=FLAGS.swiftclient_key
-    
+
             opts = {'auth' : ST_AUTH,
                 'user' : ST_USER,
                 'key' : ST_KEY,
@@ -119,7 +119,7 @@ class Controller(object):
                 swift.st_delete(opts, container, file)
             except Exception as e:
                 exc.HTTPInternalServerError(e)
-        
+
         # Mark snapshot deleted in DB
         dbapi.db_snapshot_delete(context, id)
 
@@ -132,12 +132,12 @@ class Controller(object):
         name = body['snapshot']['name']
         LOG.info("Create Snapshot for instance %s", instance_id)
         LOG.debug("%s - %s", req.environ, req.body)
-        
+
         context = req.environ['nova.context']
 
         # Generate UUID for Snapshot
         uuid = str(utils.gen_uuid())
-        
+
         values = {
             'uuid' : uuid,
             'instance_uuid' : instance_id,
@@ -146,12 +146,12 @@ class Controller(object):
             'user_id' : context.user_id,
             'project_id' : context.project_id
             }
-        
+
         ## TODO Move these to database!
         ST_AUTH=FLAGS.swiftclient_auth_url
         ST_USER=FLAGS.swiftclient_user
-        ST_KEY=FLAGS.swiftclient_key        
-        
+        ST_KEY=FLAGS.swiftclient_key
+
         # Add record to database
         db_snapshot = dbapi.db_snapshot_create(context, values)
         cred = credential.SwiftCredential(ST_USER, ST_KEY, ST_AUTH)
@@ -169,7 +169,7 @@ class Controller(object):
             body['snapshot']['name']
         except KeyError as e:
             LOG.error("Create Snapshot Required field(s) - %s" % e)
-            raise exception.BadRequest("Required element/key - %s was not specified" % e)        
+            raise exception.BadRequest("Required element/key - %s was not specified" % e)
 
 def create_resource(version='1.0'):
     controller = {

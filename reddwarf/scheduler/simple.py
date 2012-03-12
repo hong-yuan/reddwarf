@@ -166,7 +166,7 @@ class MemoryScheduler(SimpleScheduler):
             needed_memory = memory_mb + instance_ref['memory_mb']
             if needed_memory <= FLAGS.max_instance_memory_mb and \
                self.service_is_up(service):
-                LOG.debug("Scheduling instance %s" % 
+                LOG.debug("Scheduling instance %s" %
                           instance_ref['display_name'])
                 return self._schedule_now_on_host(context, service['host'],
                                                   instance_ref['id'])
@@ -190,8 +190,8 @@ class UnforgivingMemoryScheduler(MemoryScheduler):
             return base.schedule_run_instance(context, instance_id,
                                               *_args, **_kwargs)
         except driver.NoValidHost:
-            db.instance_update(context, 
-                               instance_id, 
+            db.instance_update(context,
+                               instance_id,
                                {'power_state': power_state.FAILED,
                                 'vm_state': vm_states.ERROR})
             memory_mb = db.instance_get(context, instance_id)['memory_mb']

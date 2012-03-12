@@ -1,8 +1,4 @@
-#!/bin/sh
-
-# Copyright 2010 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Rights Reserved.
+#    Copyright 2012 OpenStack LLC
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -16,5 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-dpkg-buildpackage -b -rfakeroot -tc -uc -D
+import unittest
+from reddwarf.util.enum import enum
+from reddwarf.util.enum import Enum
 
+Person = enum(JOE = 1, MIKE = 2, BOB = 3)
+
+class EnumTest(unittest.TestCase):
+    def test_value_of(self):
+        self.assertEquals(Enum.valueOf(Person, 3), "BOB")

@@ -217,7 +217,7 @@ class InitMyCnf(DbaasTest):
         child.sendline("GRANT ALL PRIVILEGES ON *.* TO test@'localhost' WITH GRANT OPTION;")
         child.expect("Query OK, 0 rows affected")
         child.sendline("exit")
-        
+
 
 @test(groups=[GROUP], depends_on_classes=[InitMyCnf])
 class RestartMySql(DbaasTest):

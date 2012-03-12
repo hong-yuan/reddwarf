@@ -60,7 +60,7 @@ def internalid_from_uuid(id):
 
 def instance_delete(id):
     return
-    
+
 def compute_get_osclient_not_found(osclient, id):
     return webob.exc.HTTPNotFound()
 
@@ -90,7 +90,7 @@ def get_osclient_show_restarting(osclient, id):
     return response
 
 class DummyServer(object):
-    
+
     def __init__(self):
         self.id = 11111
         self.status = "ACTIVE "
@@ -120,7 +120,7 @@ class InstanceApiTest(test.TestCase):
 #    def test_instances_delete_unprocessable(self):
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "delete", compute_get_osclient_unprocessable)
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "show", get_osclient_show_deleting)
-#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)        
+#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)
 #        req = request_obj('%s/1' % instances_url, 'DELETE')
 #        res = req.get_response(util.wsgi_app(fake_auth_context=self.context))
 #        self.assertEqual(res.status_int, 422)
@@ -128,23 +128,23 @@ class InstanceApiTest(test.TestCase):
 #    def test_instances_delete_failed(self):
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "delete", compute_get_osclient_accepted)
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "show", get_osclient_show_deleting)
-#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)        
+#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)
 #        req = request_obj('%s/1' % instances_url, 'DELETE')
 #        res = req.get_response(util.wsgi_app(fake_auth_context=self.context))
 #        self.assertEqual(res.status_int, 202)
-#        
+#
 #    def test_instances_restart(self):
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "restart", compute_get_osclient_accepted)
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "show", get_osclient_show_restarting)
-#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)        
+#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)
 #        req = request_obj('%s/1/restart' % instances_url, 'POST')
 #        res = req.get_response(util.wsgi_app(fake_auth_context=self.context))
-#        self.assertEqual(res.status_int, 202)       
-#    
+#        self.assertEqual(res.status_int, 202)
+#
 #    def test_instances_restart_failed(self):
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "restart", compute_get_osclient_accepted)
 #        self.stubs.Set(reddwarf.client.osclient.OSClient, "show", get_osclient_show_deleting)
-#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)        
+#        self.stubs.Set(reddwarf.db.api, "internalid_from_uuid", internalid_from_uuid)
 #        req = request_obj('%s/1/restart' % instances_url, 'POST')
 #        res = req.get_response(util.wsgi_app(fake_auth_context=self.context))
-#        self.assertEqual(res.status_int, 500)  
+#        self.assertEqual(res.status_int, 500)

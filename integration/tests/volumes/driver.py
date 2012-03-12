@@ -407,7 +407,7 @@ class Initialize(VolumeTest):
         """If initialize is called but a UUID exists, it should not format."""
         old_uuid = self.story.get_volume()['uuid']
         self.assertTrue(old_uuid is not None)
-        
+
         class VolumeClientNoFmt(volume.Client):
 
             def _format(self, device_path):

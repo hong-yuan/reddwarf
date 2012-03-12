@@ -39,7 +39,7 @@ class Management(base.ManagerWithFind):
 
         :rtype: :class:`Instance`.
         """
-        
+
         return self._list("/mgmt/instances/%s" % base.getid(instance),
             'instance')
 

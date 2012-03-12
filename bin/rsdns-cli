@@ -148,7 +148,7 @@ if __name__=="__main__":
     oparser.add_option("-f", "--flagfile",
                        help="A flag file.")
     (options, args) = oparser.parse_args()
-    
+
     if not args:
         common.print_commands(COMMANDS)
 

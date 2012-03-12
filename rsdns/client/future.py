@@ -15,7 +15,7 @@ class RsDnsError(RuntimeError):
 
 class FutureResource(object):
     """Polls a callback url to return a resource."""
-    
+
     def __init__(self, manager, jobId, callbackUrl, status, **kwargs):
         self.manager = manager
         self.jobId = jobId

@@ -128,7 +128,7 @@ class OpenVzConnection(driver.ComputeDriver):
     @classmethod
     def instance(cls):
         """
-        This is borrowed from the fake driver.  
+        This is borrowed from the fake driver.
         """
         if not hasattr(cls, '_instance'):
             cls._instance = cls()
@@ -354,7 +354,7 @@ class OpenVzConnection(driver.ComputeDriver):
         """
         I exist as a stopgap because currently there are no os hints
         in the image managment of nova.  There are ways of hacking it in
-        via image_properties but this requires special case code just for 
+        via image_properties but this requires special case code just for
         this driver.  I will be working to hack in an oshint feature once
         the driver is accepted into nova.
 
@@ -785,7 +785,7 @@ class OpenVzConnection(driver.ComputeDriver):
         vzctl set <ctid> --save --cpuunits <units>
 
         If I fail to run an exception is raised because this is the secret
-        sauce to constraining each container within it's subscribed slice of 
+        sauce to constraining each container within it's subscribed slice of
         the host node.
         """
         if not units:
@@ -824,7 +824,7 @@ class OpenVzConnection(driver.ComputeDriver):
         vzctl set <ctid> --save --cpulimit <cpulimit>
 
         If I fail to run an exception is raised because this is the secret
-        sauce to constraining each container within it's subscribed slice of 
+        sauce to constraining each container within it's subscribed slice of
         the host node.
         """
 
@@ -958,7 +958,7 @@ class OpenVzConnection(driver.ComputeDriver):
 
     def plug_vifs(self, instance, network_info):
         """
-        I plug vifs into networks and configure network devices in the 
+        I plug vifs into networks and configure network devices in the
         container.  I am necessary to make multi-nic go.
         """
         interfaces = []
@@ -2178,7 +2178,7 @@ class OVZNetworkInterfaces(object):
         else:
             for net_dev in self.interface_info:
                 self._add_ip(net_dev['id'], net_dev['address'])
-        
+
         self._set_nameserver(net_dev['id'], net_dev['dns'])
 
     def _load_template(self):

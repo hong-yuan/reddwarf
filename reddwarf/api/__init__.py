@@ -197,7 +197,7 @@ class APIRouter(wsgi.Router):
         mapper.connect("/{project_id}/instances/{instance_id}/resetpassword",
                controller=instances.create_resource(),
                action="reset_db_password", conditions=dict(method=["POST"]))
-    
+
         mapper.connect("/{project_id}/instances/{instance_id}/restart",
                        controller=instances.create_resource(),
                        action="restart_compute_instance", conditions=dict(method=["POST"]))

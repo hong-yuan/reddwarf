@@ -60,7 +60,7 @@ class Users(object):
     def __init__(self, user_list):
         self.users = []
         for user_dict in user_list:
-            reqs = Requirements(**user_dict["requirements"])            
+            reqs = Requirements(**user_dict["requirements"])
             user = ServiceUser(auth_user=user_dict["auth_user"],
                                auth_key=user_dict["auth_key"],
                                tenant=user_dict["tenant"],

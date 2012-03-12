@@ -28,7 +28,7 @@ class Accounts(base.ManagerWithFind):
     """
 
     resource_class = Account
-    
+
     def _list(self, url, response_key):
         resp, body = self.api.client.get(url)
         if not body:
@@ -41,7 +41,7 @@ class Accounts(base.ManagerWithFind):
 
         :rtype: :class:`Account`.
         """
-        
+
         acct_name = self._get_account_name(account)
         return self._list("/mgmt/accounts/%s" % acct_name, 'account')
 
